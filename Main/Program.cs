@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Matrices;
 using Vectors;
 
@@ -8,7 +9,9 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            VectorTests();
+            MyGraphics myG = new MyGraphics();
+            myG.Work();
+            //VectorTests();
             //Tests();
         }
 

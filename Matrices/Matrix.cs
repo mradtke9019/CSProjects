@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace Matrices
 {
-    public class Matrix : IComparable<Matrix>, IEnumerable
+    public class Matrix : IComparable<Matrix>
     {
 
         public readonly int m;
@@ -167,10 +167,7 @@ namespace Matrices
         {
             if (this.m != 2 && this.n != 2)
                 throw new ArithmeticException();
-            //for
             return this * v;
-            throw new NotImplementedException();
-            //return new Vector2D();
         }
 
         public static Matrix ToMatrix(Vector2D v)
@@ -213,9 +210,5 @@ namespace Matrices
             return 0;
         }
 
-        public IEnumerator GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
