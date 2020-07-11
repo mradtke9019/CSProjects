@@ -9,31 +9,31 @@ namespace Matrices
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            Matrix<int> a = new Matrix<int>(2, 2);
-            Matrix<int> b = new Matrix<int>(2, 2);
-            Matrix<int> initialized = new Matrix<int>(1,2);
-            for (int i = 0; i < a.m; i++)
-                for (int j = 0; j < 2; j++) {
-                    a.Set(i, j, i + j);
-                    b.Set(i, j, i + j);
-                }
+            //Console.WriteLine("Hello World!");
+            //Matrix<int> a = new Matrix<int>(2, 2);
+            //Matrix<int> b = new Matrix<int>(2, 2);
+            //Matrix<int> initialized = new Matrix<int>(1,2);
+            //for (int i = 0; i < a.m; i++)
+            //    for (int j = 0; j < 2; j++) {
+            //        a.Set(i, j, i + j);
+            //        b.Set(i, j, i + j);
+            //    }
 
-            Matrix<int> I = Matrix<int>.IdentityMatrix(2);
-            var aResult = a * I;
-            var aTa = a * a;
-            Console.WriteLine("A ");
-            Console.WriteLine(a.ToString());
-            Console.WriteLine("A * Identity");
-            Console.WriteLine(aResult.ToString());
-            Console.WriteLine("A * A");
-            Console.WriteLine(aTa.ToString());
-            Vector2 v = new Vector2();
-            Matrix m = new Matrix();
-            Point p = new Point(5, 5);
-            Matrix<int> c = a - b;
-            Console.WriteLine(c.ToString());
-            Console.ReadKey();
+            //Matrix<int> I = Matrix<int>.IdentityMatrix(2);
+            //var aResult = a * I;
+            //var aTa = a * a;
+            //Console.WriteLine("A ");
+            //Console.WriteLine(a.ToString());
+            //Console.WriteLine("A * Identity");
+            //Console.WriteLine(aResult.ToString());
+            //Console.WriteLine("A * A");
+            //Console.WriteLine(aTa.ToString());
+            //Vector2 v = new Vector2();
+            //Matrix m = new Matrix();
+            //Point p = new Point(5, 5);
+            //Matrix<int> c = a - b;
+            //Console.WriteLine(c.ToString());
+            //Console.ReadKey();
         }
 
         static void Test()
