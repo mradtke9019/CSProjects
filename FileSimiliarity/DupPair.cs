@@ -21,7 +21,8 @@ namespace FileSimiliarity
 
         public override string ToString()
         {
-            return similarity.ToString("##.##") + "% " + A + ":" + B;
+            var t = A.CompareTo(B) < 0 ? A + " : " + B : B + " : " + A;
+            return similarity.ToString("##.##") + "% " + t;
         }
     }
 }

@@ -184,6 +184,14 @@ namespace Matrices
         }
 
         override
+        public bool Equals(object other)
+        {
+            if (other.GetType() == this.GetType())
+                return (Matrix)other == this;
+            return false;
+        }
+
+        override
         public string ToString()
         {
             string temp = "";
@@ -208,6 +216,11 @@ namespace Matrices
                     if (this.matrix[i,j].CompareTo(other.matrix[i,j]) != 0)
                         return this.matrix[i,j].CompareTo(other.matrix[i,j]);
             return 0;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
     }

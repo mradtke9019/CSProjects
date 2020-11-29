@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\FileSystem\FileSystem.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="keywords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

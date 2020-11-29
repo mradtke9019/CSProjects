@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Extensions;
 
 namespace FileSimiliarity
 {
@@ -12,11 +13,10 @@ namespace FileSimiliarity
         static void Main(string[] args)
         {
             lck = new Mutex();
-            Driver(0.7);
+            Driver("D:\\Videos\\Movies", 0.80);
         }
-        public static void Driver(double threshold)
+        public static void Driver(string path, double threshold)
         {
-            var path = "D:\\Videos\\Movies";
             var dirs = System.IO.Directory.GetDirectories(path);
 
             List<DupPair> similars = new List<DupPair>();
@@ -63,8 +63,8 @@ namespace FileSimiliarity
         public static bool fuzzyCompare(string a, string b, double percentSimilar)
         {
             var distance = EditDistance(a, b, a.Length, b.Length);
-            var min = Min(new int[] { a.Length, b.Length });
-            var similar = toDouble(min) / toDouble(min + distance);
+            var min = Extensions.Extensions.Min(new int[] { a.Length, b.Length });
+            var similar = min.ToDouble()/ (min + distance).ToDouble();
 
             if (similar >= percentSimilar)
                 return true;
@@ -75,8 +75,8 @@ namespace FileSimiliarity
         {
             // "Some" => "Something" => editdistance 5 => some is 44% similar to something
             var distance = EditDistance(a, b, a.Length, b.Length);
-            var min = Min(new int[] { a.Length, b.Length });
-            var similar = toDouble(min) / toDouble(min + distance);
+            var min = (new int[] { a.Length, b.Length }).Min();
+            var similar = (min).ToDouble() / (min + distance).ToDouble();
 
             return similar;
         }
@@ -109,7 +109,7 @@ namespace FileSimiliarity
                 for (var j = 1; j <= b.Length; j++)
                 {
                     var cost = (b[j - 1] == a[i - 1]) ? 0 : 1;
-                    d[i, j] = Min(
+                    d[i, j] = Extensions.Extensions.Min(
                          d[i - 1, j] + 1,
                          d[i, j - 1] + 1,
                          d[i - 1, j - 1] + cost
@@ -119,29 +119,5 @@ namespace FileSimiliarity
             return d[a.Length, b.Length];
         }
 
-        public static Double toDouble(object a)
-        {
-            double b = Double.Parse(a.ToString());
-            return b;
-        }
-
-        public static Double toDouble(int a)
-        {
-            double b = Double.Parse(a.ToString());
-            return b;
-        }
-
-        public static int Min(int[] nums)
-        {
-            var min = int.MaxValue;
-            foreach (var num in nums)
-            {
-                if (num < min)
-                    min = num;
-            }
-            return min;
-        }
-        private static int Min(int e1, int e2, int e3) =>
-        Math.Min(Math.Min(e1, e2), e3);
     }
 }

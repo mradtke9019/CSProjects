@@ -136,6 +136,7 @@ WEB.-AMRAP
 [Triple-Audio]
 -mrs
    5.1
+5.1
 5.1ChReEnc-DeeJayAhmed
 ChReEnc-DeeJayAhmed
 DeeJayAhmed
@@ -203,6 +204,9 @@ q22 Joy
 10bit  5.1-[CRuNCH]
 10bit  5.1-
 10bit  5.1-ImE
+[CRuNCH]
+5.1-
+5.1-ImE
   2.0 
 [YTS.LT]
 -JYK
@@ -222,3 +226,49 @@ WEB.-PHOENiX
 -ORPHEUS
 [pseudo] 
 [pseudo]
+-ION10
+-WAT
+.NF.
+HC.[TGx]
+V2.HC[TGx]
+playnow-
+TS.Clean.Audio.H2.CH-BLiTZCRiEG
+HDTVRip
+.DSNPDDP5.1.Atmos.-NOGRP[TGx]
+H.265-McTav
+DSNPDDP5.1.Atmos.-NOGRP[TGx]
+ -McTav
+-McTav
+ShAaNiG
+-[MULVAcoded]
+[TGx]
+[1080p  HEVC  10bit] [ 5.1] [MKV]
+[1080p  HEVC  10bit]
+[ 5.1]
+[MKV]
+10bit5.1-ImE
+-AFG
+10bit2CHHEVC-PSA
+HULU
+5.1.Judas
+-PA
+Rip  KitAxe [Hin-Eng]
+,.-5.1.
+-SiC
+[A Release Lounge H]
+[ch4cal]
+PPVRip www.IWANNADOWNLOAD.com
+www.IWANNADOWNLOAD.com
+PPVRip
+[BADASSMEDIA]
+DTS-CHD
+[H-mp4]
+[SubRip - MicroDVD]
+READNFO-BiDA
+-D_S_A
+-BoBo
+VPPV
+HC900MB
+HD-TS 550 MB - iExTV
+[TorrentCounter.eu].
+[TorrentCounter.eu]
