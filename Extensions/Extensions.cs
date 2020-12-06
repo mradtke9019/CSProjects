@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Extensions
@@ -35,6 +36,33 @@ namespace Extensions
             if (newStr.EndsWith(".") || newStr.EndsWith("-"))
                 newStr = newStr.Substring(0, newStr.Length - 1);
             return newStr.Trim();
+        }
+
+        public static string StripPeriod(this string str)
+        {
+            
+            if (str.Contains(".") && str.Split('.').Length > 1 && (!str.Contains(" .") && !str.Contains(". ") && !str.Contains(" . ")))
+            {
+                str = string.Join(' ', str.Split('.'));
+            }
+            return str;
+        }
+
+        public static string TrimSpace(this string str)
+        {
+            while(str.Contains("  "))
+                str = str.Replace("  ", " ");
+            return str;
+        }
+
+        public static string Capitalize(this string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+            if (str.Length == 1)
+                return str.ToUpper();
+
+            return string.Join(' ', str.Split(' ').Select(x => x.Length > 1 ? x.First().ToString().ToUpper() + x.Substring(1, x.Length - 1).ToLower() : x.First().ToString().ToUpper()));
         }
 
         /// <summary>

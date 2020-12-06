@@ -20,7 +20,14 @@ namespace FileSystem
         {
             if (!Directory.Exists(path))
                 throw new InvalidOperationException();
-            path = DirectoryFunction(path);
+            var oldPath = path;
+            if(DirectoryFunction != null)
+                path = DirectoryFunction(path);
+            if(!Directory.Exists(path))
+            {
+                Console.WriteLine(path + " does not exist");
+                path = oldPath;
+            }
             var files = Directory.GetFiles(path);
 
             if (FileFunction != null)

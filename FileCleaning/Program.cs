@@ -11,18 +11,31 @@ namespace FileCleaning
     {
         public static List<string> videoExtensions = new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".srt", ".m4v" };
         public static List<string> keywords;
+        public static List<string> dirs;
 
         static void Main(string[] args)
         {
             keywords = File.ReadAllText("./keywords.txt").Replace("\r", "").Split('\n').OrderByDescending(x => x.Length).ToList();
-            Utility.DirectoryRun("D:\\Videos", CleanDirectory, CleanFile, true);
+
+            //Utility.DirectoryRun("D:\\Videos", CleanDirectory, CleanFile, true);
+            //Utility.DirectoryRun("H:\\Videos\\Movies", null, MoveFileToParent, false);
+            FileSystem.Utility.DirectoryRun("H:\\Videos\\Movies", CleanDirectory, null, true);
+
             //CleanDirectory("D:\\Videos", videoExtensions, keywords);
-            //CleanDirectory("H:\\Videos", videoExtensions, keywords);
+            //MoveFileToParent("D:\\Videos\\Movies\\Monsters Inc.mp4");
         }
+
+        public static void AddDirectory(string path)
+        {
+            var dir = path.Split('\\').Last();
+            if(dir.Contains("  ") || (dir.Contains(".") && !dir.Contains(" .") && !dir.Contains(". ") && !dir.Contains(" . ")))
+                dirs.Add(dir);
+        }
+
 
         public static string CleanDirectory(string path)
         {
-            var newPath = path.Strip(keywords);
+            var newPath = path.Strip(keywords).StripPeriod().TrimSpace().Trim();
             if (newPath != path)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -57,7 +70,7 @@ namespace FileCleaning
                 return path;
 
             //Remove the extension, clean the name, then readd the extension
-            string dest = path.Remove(extensionIndex).Strip(keywords);
+            string dest = path.Remove(extensionIndex).Strip(keywords).TrimSpace().Trim();
             dest += extension;
             // Dont allow File.Move if the name has not changed. Exception will be thrown
             if (dest == path)
@@ -70,6 +83,41 @@ namespace FileCleaning
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(dest.GetIndentation() + dest);
             File.Move(path, dest);
+
+            return dest;
+        }
+
+        public static string MoveFileToParent(string filePath)
+        {
+            if (!File.Exists(filePath))
+                return filePath;
+            
+            string extension = string.Empty;
+            int extensionIndex = -1;
+            foreach (var type in videoExtensions)
+            {
+                extensionIndex = filePath.LastIndexOf(type);
+                if (extensionIndex < 0 || extensionIndex + type.Length != filePath.Length)
+                    continue;
+                extension = filePath.Substring(filePath.LastIndexOf(type));
+                break;
+            }
+
+            if (extensionIndex < 0)
+                return filePath;
+
+            //Remove the extension, clean the name, then readd the extension
+            string dest = filePath.Remove(extensionIndex).Strip(keywords).TrimSpace().Trim().Replace("\\ ", "\\");
+            var baseName = filePath.Split('\\').Last();
+            // Dont allow File.Move if the name has not changed. Exception will be thrown
+            if (!Directory.Exists(dest))
+            {
+                Directory.CreateDirectory(dest);
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(dest.GetIndentation() + dest);
+            File.Move(filePath, dest + "\\" + baseName.Trim().Replace(" ", "."));
 
             return dest;
         }
