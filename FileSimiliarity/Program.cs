@@ -13,11 +13,20 @@ namespace FileSimiliarity
         static void Main(string[] args)
         {
             lck = new Mutex();
-            Driver("D:\\Videos\\Movies", 0.70);
+            Driver("D:\\Videos\\Movies", 0.70, true, new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".m4v" }, "sample");
         }
-        public static void Driver(string path, double threshold)
+        public static void Driver(string path, double threshold, bool useFiles = false, List<string> extensions = null, string exception = null)
         {
-            var dirs = System.IO.Directory.GetDirectories(path);
+            var dirs = System.IO.Directory.GetDirectories(path).ToList();
+            if(useFiles)
+            {
+                var files = new List<string>();
+                foreach (var dir in dirs)
+                    foreach (var file in System.IO.Directory.GetFiles(dir).ToList())
+                        if (!file.ToLower().Contains(exception.ToLower()) && extensions.Contains(file.Substring(file.LastIndexOf("."))))
+                            files.Add(file);
+                dirs = files;
+            }
 
             List<DupPair> similars = new List<DupPair>();
             List<Task> jobs = new List<Task>();
@@ -30,15 +39,15 @@ namespace FileSimiliarity
                         continue;
                     jobs.Add(new Task(() =>
                     {
-                        var d1 = dir1.Substring(path.Length + 1);
-                        var d2 = dir2.Substring(path.Length + 1);
+                        var d1 = dir1.Substring(dir1.LastIndexOf("\\") + 1);
+                        var d2 = dir2.Substring(dir2.LastIndexOf("\\") + 1);
                         var similar = Math.Max(Utility.FuzzyCompare(string.Join(" " , d1.Split(' ').OrderBy(x => x)), string.Join(" ", d2.Split(' ').OrderBy(x => x))), Utility.FuzzyCompare(d1, d2));
                         if (similar > threshold)
                         {
                             DupPair d = new DupPair()
                             {
-                                A = d1,
-                                B = d2,
+                                A = dir1,
+                                B = dir2,
                                 similarity = similar * 100
                             };
                             lck.WaitOne();
@@ -53,9 +62,15 @@ namespace FileSimiliarity
                 t.Start();
 
             Task.WaitAll(jobs.ToArray());
+            int i = 0;
             foreach (var sim in similars.OrderByDescending(x => x.similarity))
             {
                 Console.WriteLine(sim.ToString());
+                i++;
+                if (i % 2 == 0)
+                    Console.ForegroundColor = ConsoleColor.Green;
+                else
+                    Console.ForegroundColor = ConsoleColor.Yellow;
             }
             Console.WriteLine("Done");
         }
