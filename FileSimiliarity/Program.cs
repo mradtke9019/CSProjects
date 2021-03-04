@@ -32,7 +32,7 @@ namespace FileSimiliarity
                     {
                         var d1 = dir1.Substring(path.Length + 1);
                         var d2 = dir2.Substring(path.Length + 1);
-                        var similar = Utility.FuzzyCompare(d1, d2);
+                        var similar = Math.Max(Utility.FuzzyCompare(string.Join(" " , d1.Split(' ').OrderBy(x => x)), string.Join(" ", d2.Split(' ').OrderBy(x => x))), Utility.FuzzyCompare(d1, d2));
                         if (similar > threshold)
                         {
                             DupPair d = new DupPair()

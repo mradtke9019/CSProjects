@@ -15,11 +15,15 @@ namespace FileCleaning
 
         static void Main(string[] args)
         {
-            keywords = File.ReadAllText("./keywords.txt").Replace("\r", "").Split('\n').OrderByDescending(x => x.Length).ToList();
+            keywords = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "/keywords.txt").Replace("\r", "").Split('\n').OrderByDescending(x => x.Length).ToList();
 
             //Utility.DirectoryRun("D:\\Videos", CleanDirectory, CleanFile, true);
             //Utility.DirectoryRun("H:\\Videos\\Movies", null, MoveFileToParent, false);
-            FileSystem.Utility.DirectoryRun("H:\\Videos\\Movies", CleanDirectory, null, true);
+            //FileSystem.Utility.DirectoryRun("D:\\Videos\\Movies", CleanDirectory, CleanFile, true);
+            //FileSystem.Utility.DirectoryRun("D:\\Videos\\TV", CleanDirectory, CleanFile, true);
+            var flaglessArgs = args.Where(x => !x.Contains("-"))?.ToArray();
+            FileSystem.Utility.DirectoryRun(flaglessArgs.Length> 0 ? flaglessArgs[0] : Directory.GetCurrentDirectory(), CleanDirectory, CleanFile, args.Length > 0 && args.Contains("-r") ? true : false );
+
 
             //CleanDirectory("D:\\Videos", videoExtensions, keywords);
             //MoveFileToParent("D:\\Videos\\Movies\\Monsters Inc.mp4");
@@ -35,7 +39,17 @@ namespace FileCleaning
 
         public static string CleanDirectory(string path)
         {
-            var newPath = path.Strip(keywords).StripPeriod().TrimSpace().Trim();
+            string newPath = path.Strip(keywords).StripPeriod().TrimSpace().Trim();
+            string prevPath = null;
+            while (true)
+            {
+                // Keep stripping keywords until they are all gone
+                if (newPath == prevPath)
+                    break;
+                else
+                    newPath = newPath.Strip(keywords).StripPeriod().TrimSpace().Trim();
+                prevPath = newPath;
+            }
             if (newPath != path)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -47,6 +61,8 @@ namespace FileCleaning
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(path.GetIndentation() + path);
             }
+
+            Console.ForegroundColor = ConsoleColor.Gray;
             return newPath;
         }
 
@@ -71,12 +87,24 @@ namespace FileCleaning
 
             //Remove the extension, clean the name, then readd the extension
             string dest = path.Remove(extensionIndex).Strip(keywords).TrimSpace().Trim();
+            string prevName = null;
+            // Keep stripping keywords until the file isnt changing
+            while (true)
+            {
+                if (dest == prevName)
+                    break;
+                else
+                    dest = dest.Strip(keywords).TrimSpace().Trim();
+                prevName = dest;
+            }
+
             dest += extension;
             // Dont allow File.Move if the name has not changed. Exception will be thrown
             if (dest == path)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(dest.GetIndentation() + dest);
+                Console.ForegroundColor = ConsoleColor.Gray;
                 return dest;
             }
 

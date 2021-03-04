@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FileCleaning": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\Videos\\New Downloads\" \"-r\""
+    }
+  }
+}

@@ -16,8 +16,133 @@ namespace Main
             public string A;
             public string B;
         }
+        public class Solution
+        {
+            public static List<char> possibleValues = new List<char>() { '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+            public static List<int> possibleValuesInt = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            public void SolveSudoku(char[][] board)
+            {
+                var done = false;
+                var stuck = false;
+                while (!isGameDone(board))
+                {
+                    stuck = true;
+                    for (int i = 0; i < 9; i++)
+                    {
+                        for (int j = 0; j < 9; j++)
+                        {
+                            if (board[i][j] != '.')
+                                continue;
+                            var possible = GetValuesForPosition(board, i, j);
+                            if (possible.Length == 1)
+                            {
+                                stuck = false;
+                                board[i][j] = char.Parse(possible[0].ToString());
+                            }
+                        }
+                    }
+                    if (stuck)
+                        Console.WriteLine("Stuck");
+                }
+                foreach(var row in board)
+                {
+                    foreach (var col in row)
+                        Console.Write(col + " ");
+                    Console.WriteLine();
+                }
+                Console.WriteLine(board);
+            }
+
+            public bool isGameDone(char[][] board)
+            {
+                for(int i = 0; i < board.Length; i++)
+                {
+                    for (int j = 0; j < board[i].Length; j++)
+                        if (board[i][j] == '.')
+                            return false;
+                }
+                return true;
+            }
+
+            public int[] GetValuesForPosition(char[][] board, int i, int j)
+            {
+                var rowValues = GetValuesWithinRow(board, i);
+                var columnValues = GetValuesWithinColumn(board, j);
+                var boxValues = GetValuesWithinSubbox(board, i, j);
+                return rowValues.Intersect(columnValues).Intersect(boxValues).ToArray();
+            }
+
+            public int[] GetValuesWithinRow(char[][] board, int i)
+            {
+                var rowNums = new List<int>();
+                // Check values 
+
+                for (int columnPosition = 0; columnPosition < board.Length; columnPosition++)
+                {
+                    if (board[i][columnPosition] == '.')
+                        continue;
+                    // Get values within a row
+                    rowNums.Add(int.Parse(board[i][columnPosition].ToString()));
+                }
+
+                return possibleValuesInt.Except(rowNums).ToArray();
+            }
+            public int[] GetValuesWithinColumn(char[][] board, int j)
+            {
+                var columnNums = new List<int>();
+
+                for (int row = 0; row < board.Length; row++)
+                {
+
+                    if (board[row][j] == '.')
+                        continue;
+                    // Get values within a row
+                    columnNums.Add(int.Parse(board[row][j].ToString()));
+                }
+
+                return possibleValuesInt.Except(columnNums).ToArray();
+            }
+            public int[] GetValuesWithinSubbox(char[][] board,int i, int j)
+            {
+                int boxRow = i / 3;
+                int boxCol = j / 3;
+
+                List<int> numsInBox = new List<int>();
+
+                for (int r = 0; r < 3; r++)
+                {
+                    for (int c = 0; c < 3; c++)
+                    {
+                        if (board[r + boxRow * 3][c + boxCol * 3] == '.')
+                            continue;
+                        numsInBox.Add(int.Parse(board[r + boxRow * 3][c + boxCol * 3].ToString()));
+                    }
+                }
+
+                return possibleValuesInt.Except(numsInBox).ToArray();
+            }
+        }
+
+
         static void Main(string[] args)
         {
+            var puzzle = File.ReadAllText("./puzzle.txt").Split("\n");
+
+            char[][] board = new char[9][];
+            int i = 0;
+            foreach(var row in puzzle)
+            {
+                board[i] = row.Replace("\r", "").ToCharArray();
+                i++;
+            }
+            Solution s = new Solution();
+
+            s.SolveSudoku(board);
+
+
+
+            return;
+
             var images = Directory.GetFiles(@"D:\Pictures\2016-04-25 001");//\2016-04-25 001
             List<string> badFormats = new List<string>() { "mov", "mp4", "aae"};
             List<Record> dups = new List<Record>();

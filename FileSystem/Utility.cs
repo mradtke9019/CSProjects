@@ -19,7 +19,7 @@ namespace FileSystem
         public static void DirectoryRun(string path, Func<string, string> DirectoryFunction, Func<string, string> FileFunction = null, bool recurse = false)
         {
             if (!Directory.Exists(path))
-                throw new InvalidOperationException();
+                throw new InvalidOperationException(path + " does not exist");
             var oldPath = path;
             if(DirectoryFunction != null)
                 path = DirectoryFunction(path);

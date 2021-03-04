@@ -10,4 +10,10 @@
     <ProjectReference Include="..\Vectors\Vectors.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="puzzle.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
