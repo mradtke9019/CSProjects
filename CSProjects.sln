@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyPass", "KeyPass\KeyPass.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileSystem", "FileSystem\FileSystem.csproj", "{8BD38181-9A1C-4555-99BA-FBD9284F0E08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Extensions\Extensions.csproj", "{20D95030-A828-40BA-A297-D7724DDE1FDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extensions", "Extensions\Extensions.csproj", "{20D95030-A828-40BA-A297-D7724DDE1FDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSync", "FileSync\FileSync.csproj", "{60752FC6-DFD7-4659-A39C-FB6685870DD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{20D95030-A828-40BA-A297-D7724DDE1FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20D95030-A828-40BA-A297-D7724DDE1FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20D95030-A828-40BA-A297-D7724DDE1FDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60752FC6-DFD7-4659-A39C-FB6685870DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60752FC6-DFD7-4659-A39C-FB6685870DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60752FC6-DFD7-4659-A39C-FB6685870DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60752FC6-DFD7-4659-A39C-FB6685870DD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

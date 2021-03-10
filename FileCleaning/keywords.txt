@@ -135,8 +135,6 @@ WEB.-AMRAP
 (Dual-Audio)
 [Triple-Audio]
 -mrs
-   5.1
-5.1
 5.1ChReEnc-DeeJayAhmed
 ChReEnc-DeeJayAhmed
 DeeJayAhmed
@@ -314,3 +312,7 @@ T00NG0D
 -strife
 [ Ch]
 [AnimeRG]
+HEVC -GIRAYS
+HEVC
+GIRAYS
+Ozlem

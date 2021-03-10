@@ -7,13 +7,13 @@ using FileSystem;
 
 namespace FileCleaning
 {
-    class Program
+    public class Program
     {
         public static List<string> videoExtensions = new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".srt", ".m4v" };
         public static List<string> keywords;
         public static List<string> dirs;
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             keywords = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "/keywords.txt").Replace("\r", "").Split('\n').OrderByDescending(x => x.Length).ToList();
 
@@ -111,6 +111,7 @@ namespace FileCleaning
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(dest.GetIndentation() + dest);
             File.Move(path, dest);
+            Console.ForegroundColor = ConsoleColor.Gray;
 
             return dest;
         }
@@ -146,6 +147,7 @@ namespace FileCleaning
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(dest.GetIndentation() + dest);
             File.Move(filePath, dest + "\\" + baseName.Trim().Replace(" ", "."));
+            Console.ForegroundColor = ConsoleColor.Gray;
 
             return dest;
         }
@@ -179,6 +181,7 @@ namespace FileCleaning
             {
                 CleanDirectory(dir, fileTypes, keywords, depth + 1);
             }
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void CleanFiles(string path, List<string> fileTypes, List<string> keywords, int depth = 0)
@@ -205,11 +208,13 @@ namespace FileCleaning
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(GetIndentation(depth) + file);
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     continue;
                 }
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(GetIndentation(depth) + file);
                 File.Move(file, dest);
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
 
