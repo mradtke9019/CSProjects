@@ -23,7 +23,11 @@ namespace FileCleaning
             //FileSystem.Utility.DirectoryRun("D:\\Videos\\TV", CleanDirectory, CleanFile, true);
             var flaglessArgs = args.Where(x => !x.Contains("-"))?.ToArray();
             FileSystem.Utility.DirectoryRun(flaglessArgs.Length> 0 ? flaglessArgs[0] : Directory.GetCurrentDirectory(), CleanDirectory, CleanFile, args.Length > 0 && args.Contains("-r") ? true : false );
-
+            if(args.Contains("-p"))
+            {
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
 
             //CleanDirectory("D:\\Videos", videoExtensions, keywords);
             //MoveFileToParent("D:\\Videos\\Movies\\Monsters Inc.mp4");

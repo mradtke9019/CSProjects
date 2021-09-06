@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileSystem", "FileSystem\Fi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extensions", "Extensions\Extensions.csproj", "{20D95030-A828-40BA-A297-D7724DDE1FDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSync", "FileSync\FileSync.csproj", "{60752FC6-DFD7-4659-A39C-FB6685870DD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileSync", "FileSync\FileSync.csproj", "{60752FC6-DFD7-4659-A39C-FB6685870DD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

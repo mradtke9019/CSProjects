@@ -126,6 +126,20 @@ namespace Main
 
         static void Main(string[] args)
         {
+            DateTime today = DateTime.Now;
+            DateTime yesterday = DateTime.MinValue;
+
+            if (today > yesterday)
+                Console.WriteLine("Today is greater than yesterday");
+
+            var dirs = Directory.GetDirectories(@"D:\SteamLibrary\steamapps\common");
+            foreach(var dir in dirs)
+            {
+                //DirectoryInfo info = new DirectoryInfo();
+
+            }
+
+
             var puzzle = File.ReadAllText("./puzzle.txt").Split("\n");
 
             char[][] board = new char[9][];

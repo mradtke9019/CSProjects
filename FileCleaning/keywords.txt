@@ -316,3 +316,44 @@ HEVC -GIRAYS
 HEVC
 GIRAYS
 Ozlem
+[H+][DVD]
+1200MB
+2GB DD5 1
+DD5 1
+2GB.DD5.1
+ - Jalucian
+Jalucian
+MkvCage
+950MB
+H264_s
+[YTS ME]
+YTS ME
+-[YTS.ME]
+YTS
+-deity
+(1080p SAMPA)
+SAMPA
+10bit
+MSubs
+LOKiHD 
+Telly
+HDCAM
+C1NEM4
+AMZN
+[i_c]
+-SLOTSLIGHTS
+CH-PSA
+SLOTSLIGHTS
+-PSA
+MeGusta
+-MeGusta[eztv.re]
+[eztv.re]
+eztv.re
+DDP5.1.-NOGRP
+NOGRP
+DDP5
+DDP5.1
+200MB - ShortRips
+200MB
+ShortRips
+-BAE
