@@ -13,7 +13,7 @@ namespace FileSimiliarity
         static void Main(string[] args)
         {
             lck = new Mutex();
-            Driver("H:\\Videos\\Movies", 0.70, true, new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".m4v" }, "sample");
+            Driver("D:\\Videos\\Movies", 0.70, true, new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".m4v" }, "sample");
         }
         public static void Driver(string path, double threshold, bool useFiles = false, List<string> extensions = null, string exception = null)
         {

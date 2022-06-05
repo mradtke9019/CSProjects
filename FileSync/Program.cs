@@ -20,8 +20,8 @@ namespace FileSync
                 string source = null;
                 string destination = null;
 #if DEBUG
-                source = @"D:\Videos\TV\";
-                destination = @"M:\Videos\TV\";
+                source = @"D:\Videos\Movies";
+                destination = @"F:\Videos\Movies";
                 recurse = true;
 
 #else
@@ -40,7 +40,7 @@ namespace FileSync
                 }
                 // Clean source. Clean destination.
                 // Process: Get files from source. Get files from destination. Add files that are missing
-                var extensions = new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".srt", ".m4v" };
+                var extensions = new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".srt", ".m4v", ".smi" };
 
                 var sourceFiles = GetFiles(source, recurse).Select(x => new FileInfo(x)).Where(x => extensions.Contains(x.Extension)).ToList();
                 var destinationFiles = GetFiles(destination, recurse).Select(x => new FileInfo(x)).Where(x => extensions.Contains(x.Extension)).ToList();
@@ -52,7 +52,7 @@ namespace FileSync
                 }
 
                 //var missingFiles = sourceFiles.Select(x => x.Name).Except(destinationFiles.Select(y => y.Name)).ToList();
-                var missingFiles = sourceFiles.Where(x => !destinationFiles.Select(y => y.Name).Contains(x.Name)).ToList();
+               var missingFiles = sourceFiles.Where(x => !destinationFiles.Select(y => y.Name).Contains(x.Name)).ToList();
                 Console.WriteLine("Copying missing files");
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 foreach (var file in missingFiles)

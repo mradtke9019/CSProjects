@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Vectors
+namespace MathLib
 {
-    public class Vector2D
+    public class Vector2D : IVector
     {
         public Vector2D(double x, double y)
         {
@@ -17,7 +18,7 @@ namespace Vectors
 
         public static Vector2D operator +(Vector2D v, Vector2D other)
         {
-            return new Vector2D(v.X+other.X, v.Y +other.Y);
+            return new Vector2D(v.X + other.X, v.Y + other.Y);
         }
         public static Vector2D operator -(Vector2D v, Vector2D other)
         {
@@ -42,12 +43,6 @@ namespace Vectors
             return new Vector2D(v.X / scale, v.Y / scale);
         }
 
-        public double DotProduct(Vector2D v1, Vector2D v2)
-        {
-
-            return v1.X * v2.X + v1.Y * v2.Y;
-        }
-
         public double Dot(IVector otherVector)
         {
             Vector2D v = otherVector as Vector2D;
@@ -55,7 +50,7 @@ namespace Vectors
         }
 
 
-        public Vector2D Normalized()
+        public IVector Normalized()
         {
             double length = Length();// = Convert.ToSingle(Math.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z)));
             return new Vector2D(this.X / length, this.Y / length);
@@ -70,25 +65,5 @@ namespace Vectors
             return (this.X * this.X) + (this.Y * this.Y);
         }
 
-        /*public static double AngleBetweenVectors(Vector2D v1, Vector2D v2)
-        {
-            double dotProduct = DotProduct(v1, v2);
-            double combinedLengths = v1.Length() * v2.Length();
-            return Math.Acos(dotProduct / combinedLengths);
-        }*/
-
-        //public void Translate(float x, float y)
-        //{
-        //    X += x;
-        //    Y += y;
-        //}
-        //public void TranslateX(float x)
-        //{
-        //    X += x;
-        //}
-        //public void TranslateY(float y)
-        //{
-        //    Y += y;
-        //}
     }
 }

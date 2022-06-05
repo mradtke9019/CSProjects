@@ -9,7 +9,7 @@ namespace FileCleaning
 {
     public class Program
     {
-        public static List<string> videoExtensions = new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".srt", ".m4v" };
+        public static List<string> videoExtensions = new List<string>() { ".mkv", ".mp4", ".avi", ".wmv", ".srt", ".m4v", ".smi" };
         public static List<string> keywords;
         public static List<string> dirs;
 

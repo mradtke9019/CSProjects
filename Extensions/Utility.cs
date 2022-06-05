@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Extensions
@@ -65,5 +66,72 @@ namespace Extensions
             return similar;
         }
 
+        public static List<System.Drawing.Point> GetPoints(int radius)
+        {
+            int xCenter = 0;
+            int yCenter = 0;
+            List<System.Drawing.Point> points = new List<System.Drawing.Point>();
+            for (int x = xCenter - radius; x <= xCenter; x++)
+            {
+                for (int y = yCenter - radius; y <= yCenter; y++)
+                {
+                    // we don't have to take the square root, it's slow
+                    if ((x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter) <= radius * radius)
+                    {
+                        points.Add(new System.Drawing.Point(x, y));
+                    }
+                }
+            }
+
+            for (int x = xCenter + radius; x >= xCenter; x--)
+            {
+                for (int y = yCenter - radius; y <= yCenter; y++)
+                {
+                    // we don't have to take the square root, it's slow
+                    if ((x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter) <= radius * radius)
+                    {
+                        points.Add(new System.Drawing.Point(x, y));
+                    }
+                }
+            }
+
+            for (int x = xCenter - radius; x <= xCenter; x++)
+            {
+                for (int y = yCenter + radius; y >= yCenter; y--)
+                {
+                    // we don't have to take the square root, it's slow
+                    if ((x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter) <= radius * radius)
+                    {
+                        points.Add(new System.Drawing.Point(x, y));
+                    }
+                }
+            }
+
+            for (int x = xCenter + radius; x >= xCenter; x--)
+            {
+                for (int y = yCenter + radius; y >= yCenter; y--)
+                {
+                    // we don't have to take the square root, it's slow
+                    if ((x - xCenter) * (x - xCenter) + (y - yCenter) * (y - yCenter) <= radius * radius)
+                    {
+                        points.Add(new System.Drawing.Point(x, y));
+                    }
+                }
+            }
+
+            return points.Distinct().ToList();
+        }
+
+        public static System.Drawing.Point PolarToCartesian(double theta, double radius, bool inDegrees = true)
+        {
+            if (inDegrees)
+                theta = Math.PI * theta / 180;
+            return new System.Drawing.Point(Convert.ToInt32(radius * Math.Cos(theta)), Convert.ToInt32(radius * Math.Sin(theta)));
+        }
+
+        public static System.Drawing.Point CalculatePointDifferences(System.Drawing.Point a, System.Drawing.Point b)
+        {
+            return new System.Drawing.Point(a.X - b.X, a.Y - b.Y);
+        }
     }
 }

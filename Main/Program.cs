@@ -7,6 +7,9 @@ using System.IO;
 using System.Linq;
 using Matrices;
 using Vectors;
+using Extensions;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Main
 {
@@ -44,7 +47,7 @@ namespace Main
                     if (stuck)
                         Console.WriteLine("Stuck");
                 }
-                foreach(var row in board)
+                foreach (var row in board)
                 {
                     foreach (var col in row)
                         Console.Write(col + " ");
@@ -55,7 +58,7 @@ namespace Main
 
             public bool isGameDone(char[][] board)
             {
-                for(int i = 0; i < board.Length; i++)
+                for (int i = 0; i < board.Length; i++)
                 {
                     for (int j = 0; j < board[i].Length; j++)
                         if (board[i][j] == '.')
@@ -102,7 +105,7 @@ namespace Main
 
                 return possibleValuesInt.Except(columnNums).ToArray();
             }
-            public int[] GetValuesWithinSubbox(char[][] board,int i, int j)
+            public int[] GetValuesWithinSubbox(char[][] board, int i, int j)
             {
                 int boxRow = i / 3;
                 int boxCol = j / 3;
@@ -126,6 +129,11 @@ namespace Main
 
         static void Main(string[] args)
         {
+            CircularMouse();
+            ImageBlurring blr = new ImageBlurring();
+            //blr.PrintPoints();
+            blr.Run();
+
             DateTime today = DateTime.Now;
             DateTime yesterday = DateTime.MinValue;
 
@@ -133,7 +141,7 @@ namespace Main
                 Console.WriteLine("Today is greater than yesterday");
 
             var dirs = Directory.GetDirectories(@"D:\SteamLibrary\steamapps\common");
-            foreach(var dir in dirs)
+            foreach (var dir in dirs)
             {
                 //DirectoryInfo info = new DirectoryInfo();
 
@@ -144,7 +152,7 @@ namespace Main
 
             char[][] board = new char[9][];
             int i = 0;
-            foreach(var row in puzzle)
+            foreach (var row in puzzle)
             {
                 board[i] = row.Replace("\r", "").ToCharArray();
                 i++;
@@ -158,14 +166,14 @@ namespace Main
             return;
 
             var images = Directory.GetFiles(@"D:\Pictures\2016-04-25 001");//\2016-04-25 001
-            List<string> badFormats = new List<string>() { "mov", "mp4", "aae"};
+            List<string> badFormats = new List<string>() { "mov", "mp4", "aae" };
             List<Record> dups = new List<Record>();
             List<string> alreadyDone = new List<string>();
             int comparisons = 0;
-            foreach(var image in images)
+            foreach (var image in images)
             {
                 alreadyDone.Add(image);
-                foreach(var img in images)
+                foreach (var img in images)
                 {
                     try
                     {
@@ -179,7 +187,7 @@ namespace Main
                         if (equalElements >= 255 && !dups.Any(x => (x.A == image && x.B == img) || (x.A == img && x.B == image)))
                             dups.Add(new Record { A = image, B = img });
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         continue;
                     }
@@ -187,7 +195,7 @@ namespace Main
             }
             Console.WriteLine(comparisons + " Comparisons");
             Console.WriteLine("Dups");
-            foreach(var dup in dups)
+            foreach (var dup in dups)
             {
                 Console.WriteLine(dup.A + " - " + dup.B);
             }
@@ -206,6 +214,93 @@ namespace Main
             //myG.Work();
             //VectorTests();
             //Tests();
+        }
+
+        public static void CircularMouse()
+        {
+            int radius = 100;
+            int  theta = 0;
+
+            // Find all offsets for the mouse to move
+            List<Point> allPoints = new List<Point>();
+            for (int i = 0; i < 360; i++)
+            {
+                allPoints.Add(Utility.PolarToCartesian(i, radius));
+            }
+
+            List<Point> offsets = new List<Point>();
+            foreach(var point in allPoints)
+            {
+                int index = allPoints.IndexOf(point) - 1;
+                if (index < 0)
+                    index = allPoints.Count - 1;
+                offsets.Add(Utility.CalculatePointDifferences(point, allPoints.ElementAt(index)));
+            }
+
+
+            Console.WriteLine($"Offsets should be 0. Actual Offsets, X: {offsets.Sum(x => x.X)}, Y: {offsets.Sum(x => x.Y)}");
+            int waitTime = Convert.ToInt32(TimeSpan.FromSeconds(1.0 / offsets.Count).TotalMilliseconds);
+            while (true)
+            {
+
+                foreach (var offset in offsets)
+                {
+                    Point curr = new Point();
+                    Win32.GetCursorPos(ref curr);
+                    var x = curr.X + offset.X;
+                    var y = curr.Y + offset.Y;
+
+                    Console.WriteLine($"{x} {y}");
+                    Win32.SetCursorPos(x, y);
+                    Thread.Sleep(waitTime);
+                }
+                Thread.Sleep(Convert.ToInt32(TimeSpan.FromSeconds(5).TotalMilliseconds));
+                Win32.DoMouseClick();
+            }
+        }
+
+        public class Win32
+        {
+            [DllImport("User32.Dll")]
+            public static extern long SetCursorPos(int x, int y);
+            [DllImport("User32.dll")]
+            public static extern bool GetCursorPos(ref Point lpPoint);
+
+            [DllImport("User32.Dll")]
+            public static extern bool ClientToScreen(IntPtr hWnd, ref POINT point);
+
+            [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+            public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
+            //Mouse actions
+            private const int MOUSEEVENTF_LEFTDOWN = 0x02;
+            private const int MOUSEEVENTF_LEFTUP = 0x04;
+            private const int MOUSEEVENTF_RIGHTDOWN = 0x08;
+            private const int MOUSEEVENTF_RIGHTUP = 0x10;
+
+
+            public static void DoMouseClick()
+            {
+                //Call the imported function with the cursor's current position
+                Point p = new Point();
+                GetCursorPos(ref p);
+                uint X = (uint)p.X;
+                uint Y = (uint)p.Y;
+                Console.WriteLine($"Mouse click at {X} {Y}");
+                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP, X, Y, 0, 0);
+            }
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct POINT
+            {
+                public int x;
+                public int y;
+
+                public POINT(int X, int Y)
+                {
+                    x = X;
+                    y = Y;
+                }
+            }
         }
 
         public static Bitmap ResizeImage(Image image, int width, int height)

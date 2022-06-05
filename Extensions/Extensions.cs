@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Extensions
 {
     public static class Extensions
     {
+        private static Mutex lck = new Mutex();
+
         /// <summary>
         /// Strip a string of any keywords specified starting from largest to smallest
         /// </summary>
@@ -103,5 +108,60 @@ namespace Extensions
 
         public static int Min(int e1, int e2, int e3) =>
         Math.Min(Math.Min(e1, e2), e3);
+
+        public static Bitmap Blur(this Bitmap Image, int intensity, int threads = 1)
+        {
+            List<Task> jobs = new List<Task>();
+            Bitmap blurred = (Bitmap)Image.Clone();
+
+            List<Point> allPoints = new List<Point>();
+            // Given a radius, create a list of differences that fit the radius
+            List<Point> offsets = Utility.GetPoints(intensity);
+
+            ExtensionHelpers.max = Image.Width * Image.Height;
+            int height = Image.Height;
+            
+            for(int i =0; i < Image.Width; i++)
+            {
+                jobs.Add(new Task(() =>
+                {
+                    ExtensionHelpers.GetAndSetPixelColorForRow(Image, blurred, offsets, ExtensionHelpers.GetNextRow());
+                }));
+            }
+
+            foreach (var job in jobs)
+                job.Start();
+            foreach (var job in jobs)
+                job.Wait();
+
+
+            //var result = Parallel.For(0, Image.Width, (i, loop) =>
+            //{
+            //    lck.WaitOne();
+            //    Bitmap clone;
+            //    clone = (Bitmap)Image.Clone();
+            //    lck.ReleaseMutex();
+            //    for (int j = 0; j < height; j++)
+            //    {
+            //        GetAndSetPixelColor(clone, blurred, offsets, i, j);
+            //        return;
+            //    }
+            //});
+
+            //while (!result.IsCompleted)
+            //    Console.Write('.');
+            //for (int i = 0; i < Image.Width; i++)
+            //{
+            //    for (int j = 0; j < Image.Height; j++)
+            //    {
+            //        jobs.Add(new Task(() => { GetAndSetPixelColor(Image, blurred, offsets, i, j); }));
+
+            //    }
+            //}
+
+            return blurred;
+        }
+
+        
     }
 }
