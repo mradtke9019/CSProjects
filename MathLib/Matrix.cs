@@ -21,6 +21,7 @@
             this.n = matrix.GetLength(1);
         }
 
+        #region Getters/Setters
 
         public double ElementAt(int m, int n)
         {
@@ -36,6 +37,7 @@
         {
             matrix[m, n] = (double)value;
         }
+        #endregion
 
         #region Operations
         public static Matrix operator +(Matrix a, Matrix b)
@@ -123,17 +125,7 @@
 
         public static bool operator !=(Matrix a, Matrix b)
         {
-            if (a.m == b.m && a.n == b.n)
-                return true;
-            for (int i = 0; i < a.m; i++)
-            {
-                for (int j = 0; j < a.n; j++)
-                {
-                    if (a.matrix[i, j].CompareTo(b.matrix[i, j]) == 0)
-                        return false;
-                }
-            }
-            return true;
+            return !(a == b);
         }
 
         public static Vector2D operator *(Matrix a, Vector2D v)
@@ -153,6 +145,11 @@
         }
         #endregion
 
+        /// <summary>
+        /// Returns the identity matrix of the specified size
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
         public static Matrix IdentityMatrix(int size)
         {
             Matrix I = new Matrix(size, size);
@@ -218,6 +215,13 @@
             return this * v;
         }
 
+
+        /// <summary>
+        /// Attempts to convert a vector to its matrix form
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static Matrix ToMatrix(IVector vector)
         {
             if (vector.GetType() == typeof(Vector2D))
@@ -245,16 +249,14 @@
             return this == other;
         }
 
-        override
-        public bool Equals(object other)
+        override public bool Equals(object other)
         {
             if (other.GetType() == this.GetType())
                 return (Matrix)other == this;
             return false;
         }
 
-        override
-        public string ToString()
+        override public string ToString()
         {
             string temp = "";
             for (int i = 0; i < matrix.GetLength(0); i++)
@@ -283,6 +285,11 @@
             return 0;
         }
 
+        /// <summary>
+        /// Returns the transpose of the matrix where the rows become the columns and the columns become the rows.
+        /// </summary>
+        /// <returns></returns>
+
         public Matrix Transpose()
         {
             Matrix transpose = new Matrix(this.n, this.m);
@@ -296,6 +303,11 @@
             return transpose;
         }
 
+        /// <summary>
+        /// Returns the diagonal sum of a square matrix. Only valid for square matrices
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public double Trace()
         {
             if (this.m != this.n)
@@ -306,6 +318,11 @@
             return sum;
         }
 
+        /// <summary>
+        /// Returns the determinant of the matrix. The determinant is the sum of the signed elementary products of each permutation. Can only be evaluated for square matrices.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public double Determinant()
         {
             if (this.m != this.n)
@@ -408,9 +425,20 @@
             return result;
         }
 
+        /// <summary>
+        /// Determines if the current matrix has an inverse
+        /// </summary>
+        /// <returns></returns>
         public bool HasInverse()
         {
-            return Determinant() != 0;
+            try
+            {
+                return Determinant() != 0;
+            }
+            catch(InvalidOperationException e)
+            {
+                return false;
+            }
         }
 
         public Matrix Inverse()

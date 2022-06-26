@@ -11,6 +11,28 @@ namespace UnitTestProject
     public class MatrixTests
     {
         [TestMethod]
+        public void MatrixBasicTest1()
+        {
+            double[,] A = { { 0, 1 }, { 1, 2 } };
+            double[,] C = { { 0, 1, 2, 2 }, { 1, 2, 2, 2 } };
+            double[,] Scale = { { 0, 2 }, { 2, 4 } };
+            double[,] AD = { { 1, 2, 2, 2 }, { 2, 5, 6, 6 } };
+
+            Matrix a = new Matrix(A);
+            Matrix b = new Matrix(A);
+            Matrix c = new Matrix(C);
+            Matrix ad = new Matrix(AD);
+
+            Matrix s = new Matrix(Scale);
+
+            Assert.IsTrue(a == b);
+            Assert.IsFalse(a != b);
+            Assert.IsTrue(a * Matrix.IdentityMatrix(2) == a);
+            Assert.IsTrue((2 * a) == s);
+            Assert.IsTrue(a * c == ad);
+        }
+
+        [TestMethod]
         public void MatrixTransposeTest1()
         {
             int m = 3; int n = 4;
@@ -210,6 +232,9 @@ namespace UnitTestProject
             Debug.WriteLine(b.ToString());
             double determinantB = -467;
             Assert.AreEqual(b.Determinant(), determinantB);
+
+            Matrix c = new Matrix(3, 2);
+            Assert.ThrowsException<InvalidOperationException>(new Action(() => c.Determinant()));
         }
     }
 }
