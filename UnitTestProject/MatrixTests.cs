@@ -1,6 +1,9 @@
 using MathLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace UnitTestProject
 {
@@ -35,6 +38,7 @@ namespace UnitTestProject
             Assert.IsTrue(A.Transpose().Transpose() == A);
         }
 
+        [TestMethod]
         public void MatrixTraceTest1()
         {
             int n = 4;
@@ -55,6 +59,157 @@ namespace UnitTestProject
             Assert.IsTrue(A.Trace() == sum);
             Matrix B = new Matrix(n, n + 1);
             Assert.ThrowsException<InvalidOperationException>(new Action(() => B.Trace()));
+        }
+
+        [TestMethod]
+        public void MatrixPermutationTest1()
+        {
+            List<List<int>> twoPermutations = new List<List<int>>()
+            {
+                new List<int>() {1,2},
+                new List<int>() {2,1}
+            };
+
+            List<List<int>> threePermutations = new List<List<int>>()
+            {
+                new List<int>() {1,2,3},
+                new List<int>() {1,3,2},
+
+                new List<int>() {2,1,3},
+                new List<int>() {2,3,1},
+
+                new List<int>() {3,1,2},
+                new List<int>() {3,2,1},
+            };
+            List<List<int>> fourPermutations = new List<List<int>>()
+            {
+                new List<int>() {1,2,3,4},
+                new List<int>() {1,2,4,3},
+                new List<int>() {1,4,2,3},
+                new List<int>() {4,1,2,3},
+
+                new List<int>() {1,3,2,4},
+                new List<int>() {1,3,4,2},
+                new List<int>() {1,4,3,2},
+                new List<int>() {4,1,3,2},
+
+                new List<int>() {2,1,3,4},
+                new List<int>() {2,1,4,3},
+                new List<int>() {2,4,1,3},
+                new List<int>() {4,2,1,3},
+
+                new List<int>() {2,3,1,4},
+                new List<int>() {2,3,4,1},
+                new List<int>() {2,4,3,1},
+                new List<int>() {4,2,3,1},
+
+                new List<int>() {3,1,2,4},
+                new List<int>() {3,1,4,2},
+                new List<int>() {3,4,1,2},
+                new List<int>() {4,3,1,2},
+
+                new List<int>() {3,2,1,4},
+                new List<int>() {3,2,4,1},
+                new List<int>() {3,4,2,1},
+                new List<int>() {4,3,2,1},
+            };
+
+            var result2 = Matrix.GetPermutations(2);
+            foreach(var test in twoPermutations)
+            {
+                Assert.IsTrue(result2.Any(permutation =>
+                {
+                    bool isValid = true;
+                    for(int i = 0; i < test.Count; i++)
+                    {
+                        if (test.ElementAt(i) != permutation.ElementAt(i))
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                    return isValid;
+                }));
+            }
+            var result3 = Matrix.GetPermutations(3);
+            foreach (var test in threePermutations)
+            {
+                Assert.IsTrue(result3.Any(permutation =>
+                {
+                    bool isValid = true;
+                    for (int i = 0; i < test.Count; i++)
+                    {
+                        if (test.ElementAt(i) != permutation.ElementAt(i))
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                    return isValid;
+                }));
+            }
+
+            var result4 = Matrix.GetPermutations(4);
+            foreach (var test in fourPermutations)
+            {
+                Assert.IsTrue(result4.Any(permutation =>
+                {
+                    bool isValid = true;
+                    for (int i = 0; i < test.Count; i++)
+                    {
+                        if (test.ElementAt(i) != permutation.ElementAt(i))
+                        {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                    return isValid;
+                }));
+            }
+        }
+
+        [TestMethod]
+        public void MatrixInversionTest1()
+        {
+            List<int> list1 = new List<int>() { 1, 2, 3 };
+            int result1 = 0;
+            Assert.AreEqual(result1, Matrix.CountInversions(list1));
+
+            List<int> list2 = new List<int>() { 1, 3, 2 };
+            int result2 = 1;
+            Assert.AreEqual(result2, Matrix.CountInversions(list2));
+
+
+            List<int> list3 = new List<int>() { 3, 2, 1 };
+            int result3 = 3;
+            Assert.AreEqual(result3, Matrix.CountInversions(list3));
+        }
+
+        [TestMethod]
+        public void MatrixDeterminantTest1()
+        {
+            Matrix a = new Matrix(2, 2);
+            a.Set(0, 0, 3);
+            a.Set(0, 1, 2);
+            a.Set(1, 0, -9);
+            a.Set(1, 1, 5);
+            Debug.WriteLine(a.ToString());
+            double determinantA = 33;
+            Assert.AreEqual(a.Determinant(), determinantA);
+
+            Matrix b = new Matrix(3, 3);
+            b.Set(0, 0, 3);
+            b.Set(0,1,5);
+            b.Set(0,2,4);
+            b.Set(1,0,-2);
+            b.Set(1,1,-1);
+            b.Set(1,2,8);
+            b.Set(2,0,-11);
+            b.Set(2,1,1);
+            b.Set(2,2,7);
+            Debug.WriteLine(b.ToString());
+            double determinantB = -467;
+            Assert.AreEqual(b.Determinant(), determinantB);
         }
     }
 }

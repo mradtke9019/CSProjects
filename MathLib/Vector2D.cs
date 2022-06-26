@@ -43,6 +43,11 @@ namespace MathLib
             return new Vector2D(v.X / scale, v.Y / scale);
         }
 
+        public Vector3D AsVector3D()
+        {
+            return new Vector3D(this.X, this.Y, 1);
+        }
+
         public double Dot(IVector otherVector)
         {
             Vector2D v = otherVector as Vector2D;

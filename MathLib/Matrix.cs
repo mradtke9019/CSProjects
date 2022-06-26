@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MathLib
+﻿namespace MathLib
 {
     public class Matrix : IMatrix
     {
@@ -14,6 +8,8 @@ namespace MathLib
         private double[,] matrix;
         public Matrix(int m, int n)
         {
+            if (m <= 0 || n <= 0)
+                throw new InvalidOperationException();
             matrix = new double[m, n];
             this.m = m;
             this.n = n;
@@ -41,6 +37,7 @@ namespace MathLib
             matrix[m, n] = (double)value;
         }
 
+        #region Operations
         public static Matrix operator +(Matrix a, Matrix b)
         {
             if (a.m != b.m || a.n != b.n)
@@ -147,6 +144,15 @@ namespace MathLib
             return vResult;
         }
 
+        public static Vector3D operator *(Matrix a, Vector3D v)
+        {
+            Matrix vMat = ToMatrix(v);
+            var result = a * vMat;
+            var vResult = new Vector3D(result.ElementAt(0, 0), result.ElementAt(1, 0), result.ElementAt(2, 0));
+            return vResult;
+        }
+        #endregion
+
         public static Matrix IdentityMatrix(int size)
         {
             Matrix I = new Matrix(size, size);
@@ -162,6 +168,44 @@ namespace MathLib
             return I;
         }
 
+        public static Matrix RotationMatrix<T>(double theta, bool inDegrees = true)
+        {
+            int size = -1;
+            if (typeof(T) == typeof(Vector2D))
+                size = 2;
+            else
+            {
+                throw new NotImplementedException();
+            }
+            if (inDegrees)
+                theta = Math.PI * theta / 180;
+            Matrix r = new Matrix(size, size);
+            if (size == 2)
+            {
+                r.Set(0, 0, Math.Cos(theta));
+                r.Set(0, 1, -Math.Sin(theta));
+                r.Set(1, 0, Math.Sin(theta));
+                r.Set(1, 1, Math.Cos(theta));
+            }
+            if (size == 3)
+            {
+                throw new NotImplementedException();
+            }
+            return r;
+        }
+        public static Matrix TranslationMatrix<T>(double x, double y, double z)
+        {
+            if (typeof(T) == typeof(Vector2D))
+            {
+                Matrix translation = IdentityMatrix(3);
+                translation.Set(0, 2, x);
+                translation.Set(1, 2, y);
+                return translation;
+            }
+
+            throw new InvalidOperationException();
+        }
+
         public static Vector2D Scale(double xScale, double yScale, Vector2D v)
         {
             return new Vector2D(v.X * xScale, v.Y * yScale);
@@ -174,12 +218,26 @@ namespace MathLib
             return this * v;
         }
 
-        public static Matrix ToMatrix(Vector2D v)
+        public static Matrix ToMatrix(IVector vector)
         {
-            Matrix vMat = new Matrix(2, 1);
-            vMat.Set(0, 0, v.X);
-            vMat.Set(1, 0, v.Y);
-            return vMat;
+            if (vector.GetType() == typeof(Vector2D))
+            {
+                Vector2D v = (Vector2D)vector;
+                Matrix vMat = new Matrix(2, 1);
+                vMat.Set(0, 0, v.X);
+                vMat.Set(1, 0, v.Y);
+                return vMat;
+            }
+            if (vector.GetType() == typeof(Vector3D))
+            {
+                Vector3D v = (Vector3D)vector;
+                Matrix vMat = new Matrix(3, 1);
+                vMat.Set(0, 0, v.X);
+                vMat.Set(1, 0, v.Y);
+                vMat.Set(2, 0, v.Z);
+                return vMat;
+            }
+            throw new InvalidOperationException();
         }
 
         public bool Equals(Matrix other)
@@ -228,11 +286,11 @@ namespace MathLib
         public Matrix Transpose()
         {
             Matrix transpose = new Matrix(this.n, this.m);
-            for(int i = 0; i < this.m; i++)
+            for (int i = 0; i < this.m; i++)
             {
-                for(int j = 0; j < this.n; j++)
+                for (int j = 0; j < this.n; j++)
                 {
-                    transpose.Set(j,i, this.matrix[i, j]);
+                    transpose.Set(j, i, this.matrix[i, j]);
                 }
             }
             return transpose;
@@ -248,8 +306,117 @@ namespace MathLib
             return sum;
         }
 
+        public double Determinant()
+        {
+            if (this.m != this.n)
+                throw new InvalidOperationException($"Determinant does not exist for non square matrices. Matrix dimensions is {this.m} by {this.n}");
+
+            List<List<int>> permutations = GetPermutations(this.n, true);
+            double determinant = 0;
+            foreach(var permutation in permutations)
+            {
+                double signedElementaryProduct = 1;
+                int i = 0;
+                int inversions = CountInversions(permutation);
+                foreach (var j in permutation)
+                {
+                    signedElementaryProduct *=  this.matrix[i, j];
+                    i++;
+                }
+
+                // If this is an odd inversion, we make this signed elementary product negative
+                signedElementaryProduct *= inversions % 2 == 0 ? 1 : -1;
+                determinant += signedElementaryProduct;
+            }
+
+            return determinant;
+        }
+
+        /// <summary>
+        /// Gets all list permutations for a list of size n
+        /// </summary>
+        /// <param name="n"></param>
+        /// <param name="zeroBased">Determine if we should use 0 based indexing for the list to be returned</param>
+        /// <returns></returns>
+        public static List<List<int>> GetPermutations(int n, bool zeroBased = false)
+        {
+            List<int> combination = new List<int>();
+            if(zeroBased)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    combination.Add(i);
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= n; i++)
+                {
+                    combination.Add(i);
+                }
+            }
+            return PermutationHelper(combination);
+        }
+
+        private static List<List<int>> PermutationHelper(List<int> list)
+        {
+            List<List<int>> result = new List<List<int>>();
+            if(list.Count == 1)
+            {
+                result.Add(list);
+                return result;
+            }
+            if(list.Count == 2)
+            {
+                result.Add(new List<int>() { list[0], list[1] });
+                result.Add(new List<int>() { list[1], list[0] });
+                return result;
+            }
+
+            foreach(var n in list)
+            {
+                var subPermutations = PermutationHelper(list.Except(new List<int>() { n }).ToList());
+                foreach (var subPermutation in subPermutations)
+                {
+                    var currResult = new List<int>();
+                    currResult.Add(n);
+                    currResult.AddRange(subPermutation);
+                    result.Add(currResult);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Take a list of numbers and counts the number of occurences where a larger number appears before a smaller number
+        /// </summary>
+        /// <param name="numbers"></param>
+        /// <returns></returns>
+        public static int CountInversions(List<int> numbers)
+        {
+            int result = 0;
+
+            foreach(var n in numbers)
+            {
+                foreach(var m in numbers.Where(x => numbers.IndexOf(x) > numbers.IndexOf(n)))
+                {
+                    if (n > m)
+                        result++;
+                }
+            }
+
+            return result;
+        }
+
+        public bool HasInverse()
+        {
+            return Determinant() != 0;
+        }
+
         public Matrix Inverse()
         {
+            if (this.m != this.n)
+                throw new InvalidOperationException($"Inverse does not exist for non square matrices. Matrix dimensions is {this.m} by {this.n}");
             throw new NotImplementedException();
         }
 

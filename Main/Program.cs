@@ -5,11 +5,10 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using Matrices;
-using Vectors;
 using Extensions;
 using System.Runtime.InteropServices;
 using System.Threading;
+using MathLib;
 
 namespace Main
 {
@@ -349,23 +348,23 @@ namespace Main
             Vector2D v1 = new Vector2D(1,1);
             Console.WriteLine("Scale test: " + (2 * v1 == new Vector2D(2, 2) ? "passed" : "failed"));
             Console.WriteLine("Addition test: " + (v1 + v1 == new Vector2D(2, 2) ? "passed" : "failed"));
-            Console.WriteLine("Identity mult: " + (Matrices.Matrix.IdentityMatrix(2) * v1 == v1 ? "passed" : "failed"));
+            Console.WriteLine("Identity mult: " + (MathLib.Matrix.IdentityMatrix(2) * v1 == v1 ? "passed" : "failed"));
         }
 
         public static void Tests()
         {
-            float[,] A = { { 0, 1 }, { 1, 2 } };
-            float[,] C = { { 0, 1, 2, 2 }, { 1, 2, 2, 2 } };
-            float[,] Scale = { { 0, 2 }, {2, 4 } };
+            double[,] A = { { 0, 1 }, { 1, 2 } };
+            double[,] C = { { 0, 1, 2, 2 }, { 1, 2, 2, 2 } };
+            double[,] Scale = { { 0, 2 }, {2, 4 } };
 
-            Matrices.Matrix a = new Matrices.Matrix(A);
-            Matrices.Matrix b = new Matrices.Matrix(A);
-            Matrices.Matrix c = new Matrices.Matrix(C);
+            MathLib.Matrix a = new MathLib.Matrix(A);
+            MathLib.Matrix b = new MathLib.Matrix(A);
+            MathLib.Matrix c = new MathLib.Matrix(C);
 
-            Matrices.Matrix s = new Matrices.Matrix(Scale);
+            MathLib.Matrix s = new MathLib.Matrix(Scale);
             Console.WriteLine("Equality Test: " +(a == b ? "passed" : "fail"));
             Console.WriteLine("Inequality Test: " + (a != b ? "passed" : "fail"));
-            Console.WriteLine("Identity Test: " + (a * Matrices.Matrix.IdentityMatrix(2) == a ? "passed" : "fail"));
+            Console.WriteLine("Identity Test: " + (a * MathLib.Matrix.IdentityMatrix(2) == a ? "passed" : "fail"));
             Console.WriteLine("Scale Test: " + ((2 * a) == s  ? "passed" : "fail"));
             Console.WriteLine(a * c);
         }
