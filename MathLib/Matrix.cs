@@ -108,8 +108,10 @@
             return result;
         }
 
-        public static bool operator ==(Matrix a, Matrix b)
+        public static bool operator ==(Matrix? a, Matrix? b)
         {
+            if (a == null || b == null)
+                return false;
             if (a.m != b.m || a.n != b.n)
                 return false;
             for (int i = 0; i < a.m; i++)
@@ -143,6 +145,20 @@
             var vResult = new Vector3D(result.ElementAt(0, 0), result.ElementAt(1, 0), result.ElementAt(2, 0));
             return vResult;
         }
+        public bool Equals(Matrix other)
+        {
+            return this == other;
+        }
+
+        override public bool Equals(object? other)
+        {
+            if (other == null)
+                return false;
+            if (other.GetType() == this.GetType())
+                return (Matrix)other == this;
+            return false;
+        }
+
         #endregion
 
         /// <summary>
@@ -175,7 +191,7 @@
                 throw new NotImplementedException();
             }
             if (inDegrees)
-                theta = Math.PI * theta / 180;
+                theta = (Math.PI * theta) / 180;
             Matrix r = new Matrix(size, size);
             if (size == 2)
             {
@@ -190,6 +206,7 @@
             }
             return r;
         }
+
         public static Matrix TranslationMatrix<T>(double x, double y, double z)
         {
             if (typeof(T) == typeof(Vector2D))
@@ -244,17 +261,7 @@
             throw new InvalidOperationException();
         }
 
-        public bool Equals(Matrix other)
-        {
-            return this == other;
-        }
 
-        override public bool Equals(object other)
-        {
-            if (other.GetType() == this.GetType())
-                return (Matrix)other == this;
-            return false;
-        }
 
         override public string ToString()
         {
@@ -271,9 +278,11 @@
             return temp;
         }
 
-        public int CompareTo(IMatrix other)
+        public int CompareTo(IMatrix? other)
         {
-            Matrix otherMatrix = other as Matrix;
+            if (other == null)
+                return 1;
+            Matrix? otherMatrix = other as Matrix;
             if (otherMatrix == null)
                 return 1;
             if (this.m != otherMatrix.m || this.n != otherMatrix.n)

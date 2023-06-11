@@ -387,3 +387,5 @@ HMAX
 +HI
 (1080p E Atmos 5 1 t3nzin)
 t3nzin
+HHKD
+DD5.1.HHKD

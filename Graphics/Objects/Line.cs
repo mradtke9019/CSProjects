@@ -18,11 +18,13 @@ namespace Graphics.Objects
             this.B = b;
             Color = color;
         }
-        public void Update()
+        public void Update(Matrix Transform = null)
         {
-            double theta = 1;
-            A = Matrix.RotationMatrix<Vector2D>(theta) * (Matrix.TranslationMatrix<Vector2D>(500, 800) * A.AsVector3D()).AsVector2D();
-            B = Matrix.RotationMatrix<Vector2D>(theta) * (Matrix.TranslationMatrix<Vector2D>(500, 800) * B.AsVector3D()).AsVector2D();
+            if(Transform != null)
+            {
+                A = Transform * A;
+                B = Transform * B;
+            }
         }
 
         public void Display(System.Drawing.Graphics e)

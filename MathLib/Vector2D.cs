@@ -16,6 +16,7 @@ namespace MathLib
         public double X { get; set; }
         public double Y { get; set; }
 
+        #region Operators
         public static Vector2D operator +(Vector2D v, Vector2D other)
         {
             return new Vector2D(v.X + other.X, v.Y + other.Y);
@@ -43,17 +44,42 @@ namespace MathLib
             return new Vector2D(v.X / scale, v.Y / scale);
         }
 
+        public override bool Equals(object? otherObj)
+        {
+            if (otherObj == null)
+                return false;
+            if (otherObj is Vector2D)
+            {
+                Vector2D? other = (Vector2D)otherObj;
+                if (other == null)
+                    return false;
+                return this.X == other.X && this.Y == other.Y;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        #endregion
+
         public Vector3D AsVector3D()
         {
             return new Vector3D(this.X, this.Y, 1);
         }
 
-        public double Dot(IVector otherVector)
+        public double Dot(IVector? otherVector)
         {
-            Vector2D v = otherVector as Vector2D;
+            if(otherVector == null)
+                throw new NullReferenceException();
+            Vector2D v = (Vector2D)otherVector;
+            if (v == null)
+                throw new InvalidOperationException();
+
             return this.X * v.X + this.Y * v.Y;
         }
-
 
         public IVector Normalized()
         {
@@ -68,6 +94,11 @@ namespace MathLib
         public double LengthSquared()
         {
             return (this.X * this.X) + (this.Y * this.Y);
+        }
+
+        public IVector Rotate(double theta, bool inDegrees = true)
+        {
+            return Matrix.RotationMatrix<Vector2D>(theta, inDegrees) * this;
         }
 
     }

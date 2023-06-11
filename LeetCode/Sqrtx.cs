@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LeetCode
 {
-    public class Solution
+    public partial class Solution
     {
         public int MySqrt(int x)
         {

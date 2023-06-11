@@ -29,7 +29,9 @@ namespace Graphics
             this.Paint += GraphicForm_Paint;
             objects = new List<IDrawable>();
             //objects.Add(new Circle(100, new MathLib.Vector2D(0, 0), ));\
-            objects.Add(new Line(new MathLib.Vector2D(0,0), new MathLib.Vector2D(0, 200), Color.Red));
+            double theta = 0.1;
+            MathLib.Matrix rotation = MathLib.Matrix.RotationMatrix<MathLib.Vector2D>(theta, true);
+            objects.Add(new Line(new MathLib.Vector2D(0,0), new MathLib.Vector2D(400, 400), Color.Red));
         }
 
         private void GraphicForm_Paint(object? sender, PaintEventArgs e)

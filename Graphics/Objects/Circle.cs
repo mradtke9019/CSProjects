@@ -20,7 +20,7 @@ namespace Graphics.Objects
             Velocity = velocity;
             Position = position;
         }
-        public void Update()
+        public void Update(Matrix Transform = null)
         {
             Velocity.Y += 1;
             if(Position.Y + Radius >= 1200)

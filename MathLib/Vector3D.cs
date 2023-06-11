@@ -19,6 +19,7 @@ namespace MathLib
         public double Y { get; set; }
         public double Z { get; set; }
 
+        #region Operators
         public static Vector3D operator +(Vector3D v, Vector3D other)
         {
             return new Vector3D(v.X + other.X, v.Y + other.Y, v.Z + other.Z);
@@ -46,8 +47,10 @@ namespace MathLib
             return new Vector3D(v.X / scale, v.Y / scale, v.Z / scale);
         }
 
-        public override bool Equals(object otherObj)
+        public override bool Equals(object? otherObj)
         {
+            if (otherObj == null)
+                return false;
             if (otherObj is Vector3D)
             {
                 Vector3D other = otherObj as Vector3D;
@@ -56,12 +59,18 @@ namespace MathLib
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        #endregion
+
         public Vector2D AsVector2D()
         {
             return new Vector2D(this.X, this.Y);
         }
 
-        public double Dot(IVector otherVector)
+        public double Dot(IVector? otherVector)
         {
             Vector3D v = otherVector as Vector3D;
             return (this.X * v.X) + (this.Y * v.Y) + (this.Z * v.Z);
@@ -82,6 +91,17 @@ namespace MathLib
             return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z);
         }
 
+        public IVector Rotate(double theta, bool inDegrees)
+        {
+            return Matrix.RotationMatrix<Vector3D>(theta, inDegrees) * this;
+        }
+
+        /// <summary>
+        /// Returns a vector who is perpendicular to both u and v.
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public static Vector3D CrossProduct(Vector3D u, Vector3D v)
         {
             double x = u.Y * v.Z - u.Z * v.Y;

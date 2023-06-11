@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Wisc.MathLib" Version="1.0.0" />
+    <ProjectReference Include="..\MathLib\MathLib.csproj" />
   </ItemGroup>
 
 </Project>

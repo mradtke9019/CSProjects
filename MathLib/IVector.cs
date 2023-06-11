@@ -8,9 +8,13 @@ namespace MathLib
     {
         public double Length();
         public double LengthSquared();
-        public double Dot(IVector otherVector);
-        public double AngleBetweenOtherVector(IVector otherVector)
+        public double Dot(IVector? otherVector);
+        public IVector Rotate(double theta, bool inDegrees = true);
+
+        public double AngleBetweenOtherVector(IVector? otherVector)
         {
+            if(otherVector == null)
+                throw new ArgumentNullException(nameof(otherVector));
             return Math.Acos(this.Dot(otherVector) / (this.Length() * otherVector.Length()));
         }
 
