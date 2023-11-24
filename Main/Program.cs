@@ -128,6 +128,8 @@ namespace Main
 
         static void Main(string[] args)
         {
+            PhotoSorting s = new PhotoSorting();
+            s.Run();
             CircularMouse();
             ImageBlurring blr = new ImageBlurring();
             //blr.PrintPoints();
@@ -156,10 +158,10 @@ namespace Main
                 board[i] = row.Replace("\r", "").ToCharArray();
                 i++;
             }
-            Solution s = new Solution();
+/*            Solution s = new Solution();
 
             s.SolveSudoku(board);
-
+*/
 
 
             return;
