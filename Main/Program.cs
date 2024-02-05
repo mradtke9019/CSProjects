@@ -9,6 +9,7 @@ using Extensions;
 using System.Runtime.InteropServices;
 using System.Threading;
 using MathLib;
+using System.Security.Cryptography;
 
 namespace Main
 {
@@ -128,6 +129,14 @@ namespace Main
 
         static void Main(string[] args)
         {
+            Aes aes = Aes.Create();
+            aes.GenerateIV();
+            aes.GenerateKey();
+
+            string key = Convert.ToBase64String(aes.Key);
+            string iv = Convert.ToBase64String(aes.IV);
+
+
             PhotoSorting s = new PhotoSorting();
             s.Run();
             CircularMouse();
